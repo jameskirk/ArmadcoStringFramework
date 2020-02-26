@@ -7,11 +7,17 @@ import java.util.concurrent.*;
  * !!! ATTENTION !!!
  * Please run it with VM arguments: -Xms2g -Xmx8g -Xss8m
  * !!! ATTENTION !!!
+ * Class for calculate max length of characters in a row
+ * @author golovin
  */
 public class ArmadcoString {
-
+    /** executor */
     private static ExecutorService executor = Executors.newFixedThreadPool(32);
 
+    /**
+     * Main method of Project
+     * @param args
+     */
     public static void main(String[] args) {
         final String str = ArmadcoString.createStringDataSize(2147483639); //AbstractStringBuilder.MAX_ARRAY_SIZE
         System.out.println("size of str = " + str.length() / (1024 * 1024) + " MB");
@@ -54,6 +60,11 @@ public class ArmadcoString {
         });
     }
 
+    /**
+     * Calculate max length of characters in a row in string for one thread
+     * @param str
+     * @return map with characters and max length in a row
+     */
     public Map<Character, Long> calculate(final String str) {
         Map<Character, Long> charMap = new HashMap<>(26);
         long count = 0;
@@ -82,6 +93,14 @@ public class ArmadcoString {
         return charMap;
     }
 
+    /**
+     * Calculate max length of characters in a row in string for parallel threads
+     * @param str
+     * @param start
+     * @param end
+     * @param executor
+     * @return map with characters and max length in a row
+     */
     public CompletableFuture<CalculateResult> calculate(final String str, final int start, final int end, final Executor executor) {
         return CompletableFuture.supplyAsync(() -> {
             CalculateResult calculateResult = new CalculateResult();
@@ -112,6 +131,11 @@ public class ArmadcoString {
         }, executor);
     }
 
+    /**
+     * Run lambda with performance benchmarks
+     * @param str
+     * @param runnable
+     */
     private static void runWithPerformance(final String str, Runnable runnable) {
         long startTime = System.nanoTime(); // performance
 
@@ -122,6 +146,11 @@ public class ArmadcoString {
         System.out.println("\ntime = " + ms + " ms");
     }
 
+    /**
+     * Create Big String with latin characters
+     * @param msgSize
+     * @return
+     */
     private static String createStringDataSize(int msgSize) {
         Random r = new Random();
         StringBuilder sb = new StringBuilder(msgSize);
