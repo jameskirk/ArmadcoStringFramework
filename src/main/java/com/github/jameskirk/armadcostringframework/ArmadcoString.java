@@ -21,25 +21,40 @@ public class ArmadcoString {
     public static void main(String[] args) {
         final String str = ArmadcoString.createStringDataSize(2147483639); //AbstractStringBuilder.MAX_ARRAY_SIZE
         System.out.println("size of str = " + str.length() / (1024 * 1024) + " MB");
+        ArmadcoString armadcoString = new ArmadcoString();
 
         // 1. one thread
+        armadcoString.runOneThread(str);
+
+        // 2. multi threads
+        armadcoString.runMultiThreads(str, 16L);
+    }
+
+    /**
+     * @param str
+     */
+    public void runOneThread(String str) {
         System.out.println("one thread: ");
         ArmadcoString.runWithPerformance(str, () -> {
             Map<Character, Long> charMap = new ArmadcoString().calculate(str);
             charMap.entrySet().stream().forEach(e -> System.out.print(e + " "));
         });
+    }
 
-        // 2. multi threads
+    /**
+     * @param str
+     * @param threadCount
+     */
+    public void runMultiThreads(String str, final long threadCount) {
         System.out.println("\n----\nmulti threads: ");
-        final long THREADS = 16;
         ArmadcoString.runWithPerformance(str, () -> {
             try {
                 List<Future<CalculateResult>> calculateResults = new ArrayList<>();
                 Map<Character, Long> result = new HashMap<>();
-                for (long i = 1; i <= THREADS; i++) {
+                for (long i = 1; i <= threadCount; i++) {
                     long size = str.length();
-                    int start = Long.valueOf((i - 1) * size / THREADS).intValue();
-                    int end = Long.valueOf(i * size / THREADS).intValue();
+                    int start = Long.valueOf((i - 1) * size / threadCount).intValue();
+                    int end = Long.valueOf(i * size / threadCount).intValue();
                     Future<CalculateResult> calculateResult = new ArmadcoString().calculate(str, start, end, executor);
                     calculateResults.add(calculateResult);
                 }
