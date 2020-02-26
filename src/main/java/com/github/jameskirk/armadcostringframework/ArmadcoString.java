@@ -82,36 +82,34 @@ public class ArmadcoString {
         return charMap;
     }
 
-    public Future<CalculateResult> calculate(final String str, final int start, final int end, final ExecutorService executor) {
-        final Future<CalculateResult> retVal = executor.submit(
-                () -> {
-                    CalculateResult calculateResult = new CalculateResult();
-                    Map<Character, Long> charMap = calculateResult.getCharMap();
-                    long count = 0;
-                    char prevChar = str.charAt(start);
-                    charMap.put(prevChar, 1L);
+    public CompletableFuture<CalculateResult> calculate(final String str, final int start, final int end, final Executor executor) {
+        return CompletableFuture.supplyAsync(() -> {
+            CalculateResult calculateResult = new CalculateResult();
+            Map<Character, Long> charMap = calculateResult.getCharMap();
+            long count = 0;
+            char prevChar = str.charAt(start);
+            charMap.put(prevChar, 1L);
 
-                    for (int i = start + 1; i < end; i++) {
-                        char currChar = str.charAt(i);
-                        count++;
-                        if (prevChar == currChar) {
-                            // do nothing
-                        } else {
-                            if (charMap.get(prevChar) == null || charMap.get(prevChar) < count) {
-                                charMap.put(prevChar, Long.valueOf(count));
-                            } else {
-                                // do nothing
-                            }
-                            count = 0;
-                        }
-                        if (i == end - 1 && (charMap.get(currChar) == null || charMap.get(currChar) < count + 1)) {
-                            charMap.put(currChar, Long.valueOf(count + 1));
-                        }
-                        prevChar = str.charAt(i);
+            for (int i = start + 1; i < end; i++) {
+                char currChar = str.charAt(i);
+                count++;
+                if (prevChar == currChar) {
+                    // do nothing
+                } else {
+                    if (charMap.get(prevChar) == null || charMap.get(prevChar) < count) {
+                        charMap.put(prevChar, Long.valueOf(count));
+                    } else {
+                        // do nothing
                     }
-                    return calculateResult;
-                });
-        return retVal;
+                    count = 0;
+                }
+                if (i == end - 1 && (charMap.get(currChar) == null || charMap.get(currChar) < count + 1)) {
+                    charMap.put(currChar, Long.valueOf(count + 1));
+                }
+                prevChar = str.charAt(i);
+            }
+            return calculateResult;
+        }, executor);
     }
 
     private static void runWithPerformance(final String str, Runnable runnable) {
@@ -133,64 +131,5 @@ public class ArmadcoString {
         }
         return sb.toString();
     }
-
-    static public class CalculateResult {
-        private Map<Character, Long> charMap = new HashMap<>(26);
-        private Character startChar;
-        private int startCharCount;
-        private Character endChar;
-        private int endCharCount;
-
-        public CalculateResult() {
-        }
-
-        public CalculateResult(Character startChar, int startCharCount, Character endChar, int endCharCount) {
-            this.startChar = startChar;
-            this.startCharCount = startCharCount;
-            this.endChar = endChar;
-            this.endCharCount = endCharCount;
-        }
-
-        public Map<Character, Long> getCharMap() {
-            return charMap;
-        }
-
-        public void setCharMap(Map<Character, Long> charMap) {
-            this.charMap = charMap;
-        }
-
-        public Character getStartChar() {
-            return startChar;
-        }
-
-        public void setStartChar(Character startChar) {
-            this.startChar = startChar;
-        }
-
-        public int getStartCharCount() {
-            return startCharCount;
-        }
-
-        public void setStartCharCount(int startCharCount) {
-            this.startCharCount = startCharCount;
-        }
-
-        public Character getEndChar() {
-            return endChar;
-        }
-
-        public void setEndChar(Character endChar) {
-            this.endChar = endChar;
-        }
-
-        public int getEndCharCount() {
-            return endCharCount;
-        }
-
-        public void setEndCharCount(int endCharCount) {
-            this.endCharCount = endCharCount;
-        }
-    }
-
 
 }
