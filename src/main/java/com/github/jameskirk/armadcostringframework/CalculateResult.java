@@ -9,15 +9,25 @@ import java.util.Map;
  * @author golovin
  */
 public class CalculateResult {
-    /** char map. Character and max length of character in a row */
-    private Map<Character, Integer> charMap = new HashMap<>(26);
-    /** start char */
+    /**
+     * char map. Character and max length of character in a row
+     */
+    private Map<Character, Long> charMap = new HashMap<>(26);
+    /**
+     * start char
+     */
     private Character startChar;
-    /** start char count */
+    /**
+     * start char count
+     */
     private int startCharCount;
-    /** end char */
+    /**
+     * end char
+     */
     private Character endChar;
-    /** end char count */
+    /**
+     * end char count
+     */
     private int endCharCount;
 
     /**
@@ -46,7 +56,7 @@ public class CalculateResult {
      *
      * @return the char map
      */
-    public Map<Character, Integer> getCharMap() {
+    public Map<Character, Long> getCharMap() {
         return charMap;
     }
 
@@ -55,7 +65,7 @@ public class CalculateResult {
      *
      * @param charMap the char map
      */
-    public void setCharMap(Map<Character, Integer> charMap) {
+    public void setCharMap(Map<Character, Long> charMap) {
         this.charMap = charMap;
     }
 
