@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class CalculateResult {
     /** char map. Character and max length of character in a row */
-    private Map<Character, Long> charMap = new HashMap<>(26);
+    private Map<Character, Integer> charMap = new HashMap<>(26);
     /** start char */
     private Character startChar;
     /** start char count */
@@ -46,7 +46,7 @@ public class CalculateResult {
      *
      * @return the char map
      */
-    public Map<Character, Long> getCharMap() {
+    public Map<Character, Integer> getCharMap() {
         return charMap;
     }
 
@@ -55,7 +55,7 @@ public class CalculateResult {
      *
      * @param charMap the char map
      */
-    public void setCharMap(Map<Character, Long> charMap) {
+    public void setCharMap(Map<Character, Integer> charMap) {
         this.charMap = charMap;
     }
 
